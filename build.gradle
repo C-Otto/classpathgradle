@@ -1,0 +1,30 @@
+plugins {
+    id 'java'
+//    id 'java-test-fixtures'
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    integrationTest {
+        runtimeClasspath += sourceSets.main.output // remove this after you enabled the java-test-fixtures plugin
+    }
+}
+
+configurations {
+    integrationTestImplementation.extendsFrom testImplementation
+}
+
+task integrationTest(type: Test) {
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+}
+
+dependencies {
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+    testImplementation 'org.springframework:spring-core:5.1.7.RELEASE'
+}
+
+check.dependsOn integrationTest
